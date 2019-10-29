@@ -18,6 +18,9 @@
   "bugs": {
     "url": "https://github.com/daniel-dx/cook-cli/issues"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "https://github.com/daniel-dx/cook-cli#readme",
   "dependencies": {
     "boxen": "^4.1.0",
