@@ -14,27 +14,30 @@ export function cli(args) {
 
   console.log(boxen(chalk.yellow('I like cooking'), { padding: 1 }));
 
-  program.version(pkg.version, '-v, --version').usage('<command> [options]');
+  program.version(pkg.version, '-V, --version').usage('<command> [options]');
 
   program
-    .command('hello')
-    .description('just a test command')
-    .action(function(option) {
-      console.log('run hello command');
+    .command('start <food>')
+    .option('-f, --fruit <name>', 'Fruit to be added')
+    .description('Start cooking food')
+    .action(function(food, option) {
+      console.log(`run start command`);
+      console.log(`argument: ${food}`);
+      console.log(`option: fruit = ${option.fruit}`);
     });
 
   program
-    .command('run-npm-test')
-    .description('run npm test command')
-    .action(async function(option) {
-      const { stdout } = await execa('npm run test');
-      console.log('Done:', stdout);
+    .command('npm-version')
+    .description('Display npm version')
+    .action(async function() {
+      const { stdout } = await execa('npm -v');
+      console.log('Npm version:', stdout);
     });
 
   program
     .command('ask')
     .description('Ask some questions')
-    .action(async function(option) {
+    .action(async function() {
       const answers = await inquirer.prompt([
         {
           type: 'input',
@@ -65,7 +68,7 @@ export function cli(args) {
   program
     .command('wait')
     .description('Wait 5 secords')
-    .action(async function(option) {
+    .action(async function() {
       const spinner = ora('Waiting 5 seconds').start();
       let count = 5;
 
@@ -81,12 +84,14 @@ export function cli(args) {
           }
         }, 1000);
       });
+
+      console.log('Done');
     });
 
   program
     .command('steps')
     .description('some steps')
-    .action(async function(option) {
+    .action(async function() {
       const tasks = new Listr([
         {
           title: 'Run step 1',
@@ -111,9 +116,7 @@ export function cli(args) {
         }
       ]);
 
-      await tasks.run().catch(err => {
-        console.error(err);
-      });
+      await tasks.run().catch(() => {});
     });
 
   program.parse(args);
